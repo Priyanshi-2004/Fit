@@ -30,6 +30,8 @@ export interface Video {
 }
 
 export interface Testimonial {
+  name: string | undefined;
+  review: string;
   id: string;
   client_name: string;
   client_image: string;
@@ -37,6 +39,7 @@ export interface Testimonial {
   rating: number;
   is_featured: boolean;
   created_at: string;
+  
 }
 
 export interface Transformation {
