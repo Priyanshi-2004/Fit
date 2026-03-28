@@ -30,12 +30,10 @@ export interface Video {
 }
 
 export interface Testimonial {
-  name: string | undefined;
   review: string;
   id: string;
-  client_name: string;
+  name: string;
   client_image: string;
-  content: string;
   rating: number;
   is_featured: boolean;
   created_at: string;
