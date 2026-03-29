@@ -4,14 +4,11 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
+import { UserProfileDropdown } from '@/components/user-profile-dropdown';
 
 export function Navbar() {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -78,16 +75,21 @@ export function Navbar() {
               {!isLoading && (
                 <>
                   {isLoggedIn ? (
-                    <Button variant="ghost" onClick={handleLogout}>Logout</Button>
+                    <div className="flex items-center gap-2">
+                      <Link href="/dashboard">
+                        <Button variant="ghost">Dashboard</Button>
+                      </Link>
+                      <UserProfileDropdown />
+                    </div>
                   ) : (
-                    <Link href="/login">
-                      <Button variant="ghost">Login</Button>
-                    </Link>
-                  )}
-                  {!isLoggedIn && (
-                    <Link href="#pricing">
-                      <Button>Get Started</Button>
-                    </Link>
+                    <>
+                      <Link href="/login">
+                        <Button variant="ghost">Login</Button>
+                      </Link>
+                      <Link href="#pricing">
+                        <Button>Get Started</Button>
+                      </Link>
+                    </>
                   )}
                 </>
               )}
@@ -136,10 +138,18 @@ export function Navbar() {
             {!isLoading && (
               <>
                 {isLoggedIn ? (
-                  <Button variant="ghost" className="w-full" onClick={() => {
-                    setIsOpen(false);
-                    handleLogout();
-                  }}>Logout</Button>
+                  <>
+                    <Link href="/dashboard" onClick={() => setIsOpen(false)}>
+                      <Button variant="ghost" className="w-full">Dashboard</Button>
+                    </Link>
+                    <Link href="/profile" onClick={() => setIsOpen(false)}>
+                      <Button variant="ghost" className="w-full">Profile</Button>
+                    </Link>
+                    <Button variant="destructive" className="w-full" onClick={() => {
+                      setIsOpen(false);
+                      handleLogout();
+                    }}>Logout</Button>
+                  </>
                 ) : (
                   <>
                     <Link href="/login" onClick={() => setIsOpen(false)}>

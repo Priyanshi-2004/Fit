@@ -37,10 +37,17 @@ export default function LoginPage() {
         .eq('id', data.user.id)
         .single();
 
-      if (profile?.is_admin) {
+      // Check if there's a pending checkout courseId
+      const pendingCourseId = localStorage.getItem('pendingCheckoutCourseId');
+
+      if (pendingCourseId) {
+        // Clear the stored courseId and redirect to checkout
+        localStorage.removeItem('pendingCheckoutCourseId');
+        router.push(`/checkout/${pendingCourseId}`);
+      } else if (profile?.is_admin) {
         router.push('/admin');
       } else {
-        router.push('/dashboard');
+        router.push('/');
       }
     } catch (err: any) {
       setError(err.message || 'Invalid email or password');

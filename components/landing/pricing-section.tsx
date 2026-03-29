@@ -25,8 +25,18 @@ export function PricingSection() {
     fetchCourses();
   }, []);
 
-  const handleBuyNow = (courseId: string) => {
-    router.push(`/checkout/${courseId}`);
+  const handleBuyNow = async (courseId: string) => {
+    // Check if user is logged in
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session) {
+      // Not logged in - store courseId and redirect to login
+      localStorage.setItem('pendingCheckoutCourseId', courseId);
+      router.push('/login');
+    } else {
+      // Already logged in - go directly to checkout
+      router.push(`/checkout/${courseId}`);
+    }
   };
 
   const getPlanIcon = (planType: string) => {
@@ -59,10 +69,10 @@ export function PricingSection() {
               <div
                 key={course.id}
                 className={`relative rounded-3xl p-8 transition-all duration-300 hover:scale-105 ${isPremium
-                    ? 'bg-gradient-to-br from-amber-500 to-amber-600 text-white shadow-2xl'
-                    : isPopular
-                      ? 'bg-white text-neutral-900 shadow-xl ring-2 ring-white'
-                      : 'bg-white/5 text-white backdrop-blur-sm'
+                  ? 'bg-gradient-to-br from-amber-500 to-amber-600 text-white shadow-2xl'
+                  : isPopular
+                    ? 'bg-white text-neutral-900 shadow-xl ring-2 ring-white'
+                    : 'bg-white/5 text-white backdrop-blur-sm'
                   }`}
               >
                 {isPopular && (
@@ -113,10 +123,10 @@ export function PricingSection() {
                 <Button
                   onClick={() => handleBuyNow(course.id)}
                   className={`w-full h-12 text-base font-semibold ${isPremium
-                      ? 'bg-white text-amber-600 hover:bg-neutral-100'
-                      : isPopular
-                        ? 'bg-neutral-900 text-white hover:bg-neutral-800'
-                        : 'bg-white text-neutral-900 hover:bg-neutral-100'
+                    ? 'bg-white text-amber-600 hover:bg-neutral-100'
+                    : isPopular
+                      ? 'bg-neutral-900 text-white hover:bg-neutral-800'
+                      : 'bg-white text-neutral-900 hover:bg-neutral-100'
                     }`}
                 >
                   Get Started Now

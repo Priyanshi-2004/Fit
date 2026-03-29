@@ -30,7 +30,6 @@ export default function CheckoutPage() {
 
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
 
   useEffect(() => {
     async function fetchCourse() {
@@ -68,7 +67,6 @@ export default function CheckoutPage() {
           amount: course!.price,
           customerName: fullName,
           customerEmail: email,
-          customerPhone: phone,
         }),
       });
 
@@ -112,13 +110,12 @@ export default function CheckoutPage() {
         prefill: {
           name: fullName,
           email: email,
-          contact: phone,
         },
         theme: {
           color: '#171717',
         },
         modal: {
-          ondismiss: function() {
+          ondismiss: function () {
             setProcessing(false);
           }
         }
@@ -203,19 +200,6 @@ export default function CheckoutPage() {
                       placeholder="your@email.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      required
-                      disabled={processing}
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number *</Label>
-                    <Input
-                      id="phone"
-                      type="tel"
-                      placeholder="+91 98765 43210"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
                       required
                       disabled={processing}
                     />
