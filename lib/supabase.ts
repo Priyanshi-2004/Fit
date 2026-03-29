@@ -1,24 +1,19 @@
 import { createClient } from '@supabase/supabase-js';
 
-// ✅ Client-side / public usage
-export function getSupabaseClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-  return createClient(url, key);
-}
+// ✅ Export what your project expects
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-// ✅ Server-side / admin usage
-export function getSupabaseAdmin() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const key =
-    process.env.SUPABASE_SERVICE_ROLE_KEY ||
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-  return createClient(url, key, {
+export const supabaseAdmin = createClient(
+  supabaseUrl,
+  process.env.SUPABASE_SERVICE_ROLE_KEY || supabaseAnonKey,
+  {
     auth: {
       autoRefreshToken: false,
       persistSession: false,
     },
-  });
-}
+  }
+);

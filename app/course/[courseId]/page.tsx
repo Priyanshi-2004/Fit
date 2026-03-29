@@ -1,8 +1,7 @@
 'use client';
-
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@supabase/supabase-js';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -28,6 +27,10 @@ interface Video {
 }
 
 export default function CoursePage() {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+  );
   const params = useParams();
   const router = useRouter();
   const courseId = params.courseId as string;
@@ -40,8 +43,10 @@ export default function CoursePage() {
   const [userId, setUserId] = useState<string>('');
 
   useEffect(() => {
-    checkAccess();
-  }, []);
+    if (courseId) {
+      checkAccess();
+    }
+  }, [courseId]);
 
   async function checkAccess() {
     const { data: { session } } = await supabase.auth.getSession();
@@ -291,9 +296,8 @@ export default function CoursePage() {
                           <button
                             key={video.id}
                             onClick={() => setSelectedVideo(video)}
-                            className={`w-full flex items-center gap-3 p-4 hover:bg-white transition-colors text-left border-t ${
-                              selectedVideo?.id === video.id ? 'bg-white border-l-4 border-l-emerald-500' : ''
-                            }`}
+                            className={`w-full flex items-center gap-3 p-4 hover:bg-white transition-colors text-left border-t ${selectedVideo?.id === video.id ? 'bg-white border-l-4 border-l-emerald-500' : ''
+                              }`}
                           >
                             <div className="flex-shrink-0">
                               {video.completed ? (
